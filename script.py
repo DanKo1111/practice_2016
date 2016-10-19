@@ -24,6 +24,52 @@ def mystem_parsing(input_path, output_path, mystem_dir="C:\\mystem.exe", options
 def type_token_ratio(tokens, types):
     return (types/tokens) * 100
 
+def create_csv(data):
+    new_csv = ""
+    for i in data:
+        if type(i) == type([]) or type(i) == type(()):
+            
+            for j in i:
+                new_string = ""
+                if type(j) == type([]) or type(i) == type(()):
+                    for k in j:
+                        new_string = new_string + str(k) + ","
+                    new_csv = new_csv + new_string[:-1] + "\n"
+                    
+        else:
+            new_csv += str(i)
+            new_csv += "\n"
+    return new_csv
+
+def create_csv_2(path):
+    data = read_data(path)
+    new_csv = ""
+    for i in data:
+        if type(i) == type([]) or type(i) == type(()):
+            for j in i[1]:
+                new_csv = new_csv + str(i[0]) + "," + str(j) + "\n"
+        else:
+            new_csv += str(i)
+            new_csv += "\n"
+    file = open(path[:-4] + "csv", "w")
+    file.write(new_csv)
+    file.close()
+
+def main_csv_json(path):
+    for i in os.walk(path):
+        c_dir = i[0]
+        c_files = i[2]
+        for j in c_files:
+            if ".json" in j:
+                c_path = c_dir + "\\" + j
+                data = read_data(c_path)
+                csv = create_csv(data)
+                file = open(c_path[:-4] + "csv", "w")
+                file.write(csv)
+                file.close()
+    
+        
+
 def main(path):
     all_exams = []
     for i in os.walk(path):
@@ -195,3 +241,7 @@ def data_by_file(path, name):
 
 
 main(exam_texts_dir)
+main_csv_json(os.path.dirname(os.path.abspath(__file__)) + "\\Files_by_exam_json")
+create_csv_2(os.path.dirname(os.path.abspath(__file__)) + "\\Files_by_exam_json\\all_exam_data_3000.json")
+create_csv_2(os.path.dirname(os.path.abspath(__file__)) + "\\Files_by_exam_json\\all_exam_data_5000.json")
+create_csv_2(os.path.dirname(os.path.abspath(__file__)) + "\\Files_by_exam_json\\all_exam_data_10000.json")
